@@ -1,6 +1,6 @@
 # README #
 
-This project allows a Dungeon Master to send the players the linked [Google Form](https://docs.google.com/forms/d/1VGUVROgLdVyAGdP89UKuo0nVxyrmLWX5H5k_a3D5lJg/copy), download the responses, and generate character sheets.
+This project allows a Dungeon Master to send the players the linked [Google Form](https://docs.google.com/forms/d/1VGUVROgLdVyAGdP89UKuo0nVxyrmLWX5H5k_a3D5lJg/copy), download the responses, and generate character sheets. Please don't modify this form! The link should make a copy of the form that you can edit in your own account.
 Included here is a list of the steps needed to get this in working condition, and to get everyone who fills out the form everything they need to get started!
 
 # Notes #
