@@ -505,10 +505,11 @@ def fill_out_char_sheet(response_list):
     os.system(command)
 
     #final thing: also save their race, class, and background pdfs to directory
-    save_race(race, name)
-    save_class(dndclass, name)
-    if background in background_pages.keys():
-        save_background(background, name)
+    if os.path.isfile("phb.pdf"):
+        save_race(race, name)
+        save_class(dndclass, name)
+        if background in background_pages.keys():
+            save_background(background, name)
 
 
 
