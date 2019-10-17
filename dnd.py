@@ -4,6 +4,7 @@
 import csv
 import sys
 import os
+import functools
 import subprocess
 import random
 from fdfgen import forge_fdf
@@ -35,7 +36,7 @@ field_names=['ClassLevel', 'Background', 'PlayerName', 'CharacterName', 'Race ',
    'ProficienciesLang', 'SP', 'EP', 'GP', 'PP', 'Equipment',
    'Features and Traits']
 
-surveyname_to_fieldname ={'New Phone, Who Dis?':'PlayerName',
+surveyname_to_fieldname ={'What is your name?':'PlayerName',
                           'What did you choose for Race?':'Race',
                           'What did you choose for Class?':'ClassLevel',
                           'What is your first Proficiency?':'Prof1',
@@ -73,7 +74,7 @@ fieldname_to_surveyname={'Backstory': 'Any thoughts based on above?',
                         'PersonalityTraits': 'What is your character like? Now that we know the Race and Class, write one sentence about who they are, and one sentence about how they resolve conflicts.',
                         'Inspiration': 'Did you have fun?',
                         'ClassLevel': 'What did you choose for Class?',
-                        'PlayerName': 'New Phone, Who Dis?',
+                        'PlayerName': 'What is your name?',
                         'Ability6': 'Worst (6)',
                         'Ability4': '4',
                         'Ability5': '5',
@@ -118,7 +119,7 @@ abilityscore_to_mod={1:-5, 2:-4, 3:-4, 4:-3, 5:-3, 6:-2, 7:-2, 8:-1, 9:-1, 10:0,
 fields = [('name','John Smith'),('telephone','555-1234')]
 
 #read in survey responses, for now only deal with one response
-with open('responses.csv', 'rb') as f:
+with open('responses.csv', 'r') as f:
     reader = csv.reader(f)
     response_list = list(reader)
 #print(response_list)
@@ -147,7 +148,7 @@ def filter_classname(name):
     return name[:i]
 
 def get_player(response_dict):
-    return response_dict['New Phone, Who Dis?']
+    return response_dict['What is your name?']
 
 
 
@@ -198,7 +199,7 @@ def add_race_bonuses(sheet, race, height, weight):
         sheet["Height"] += -0.3
 
     if weight == "Gimme the RANDOM":
-        rand_weight = reduce((lambda x,y: random.randint(1,x)+random.randint(1,y)), wm)
+        rand_weight = functools.reduce((lambda x,y: random.randint(1,x)+random.randint(1,y)), wm)
         sheet["Weight"] += rand_height * rand_weight
     elif weight == "Extra Heavy":
         sheet["Weight"] += sum(wm)
@@ -445,11 +446,12 @@ def init_sheet(response_list):
 
     #before returning, add duplicate entries but with keys spaces (1 and 2)
     #Do this because form data fields are inconsistently named
+    extra_items = {}
     for k, v in sheet.items():
-        sheet[k+' '] = v
-        sheet[k+'  '] = v
+        extra_items[k+' '] = v
+        extra_items[k+'  '] = v
 
-    return sheet
+    return {**sheet, **extra_items}
 
 
 def init_player_dir(name):
@@ -482,7 +484,8 @@ def fill_out_char_sheet(response_list):
 
     name=sheet["PlayerName"].replace(" ", "")
     race=sheet["Race"].replace(" ", "").replace("(","").replace(")","")
-    dndclass=filter( lambda x: x.isalpha(), sheet["ClassLevel"].replace(" ", ""))
+    dndclass=''.join(list(filter( lambda x: x.isalpha(), sheet["ClassLevel"].replace(" ", ""))))
+    print(dndclass)
     background=sheet["Background"].replace(" ", "")
 
     fdf_name = name+'_'+race+'_'+dndclass+'_'+background

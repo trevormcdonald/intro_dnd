@@ -59,7 +59,7 @@ def save_pages(a, b, playername, filename):
     for i in range(a, b+1):
         output.addPage(input1.getPage(i))
 
-    outputStream = file(playername +"/"+filename + ".pdf", "wb")
+    outputStream = open(playername +"/"+filename + ".pdf", "wb")
     output.write(outputStream)
 
 
